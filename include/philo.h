@@ -5,41 +5,49 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/20 11:14:56 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/20 17:26:34 by rgallien         ###   ########.fr       */
+/*   Created: 2024/06/23 15:51:31 by rgallien          #+#    #+#             */
+/*   Updated: 2024/06/23 19:07:05 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+# include <stdio.h>
+# include <sys/time.h>
+# include <unistd.h>
+# include <pthread.h>
+# include <stdlib.h>
 
-typedef struct s_philo
+typedef struct t_philo
 {
-	pthread_t		thread;
 	int				id;
-	int				meals_eaten;
-	size_t			time_to_die;
-	size_t			time_to_eat;
-	size_t			time_to_sleep;
-	int				num_of_philos;
-	int				num_times_to_eat;
-}					t_philo;
+	size_t			nb_philos;
+	size_t			time_die;
+	size_t			time_eat;
+	size_t			time_sleep;
+	int				must_eat;
+	size_t			start;
+	size_t			last_meal;
+	pthread_mutex_t	*l_fork;
+	pthread_mutex_t	*r_fork;
+	pthread_t		th;
+}			t_philo;
 
-typedef struct s_program
+typedef struct s_prog
 {
-	t_philo			*ph;
-	pthread_mutex_t mutex;
-}					t_program;
+	t_philo	*ph;
+}			t_prog;
 
-int		check_args(char **argv, t_program *philos);
-void	ft_free_philos(t_program *philos, int i);
-int		create_threads(t_program *philos, int nb);
+// parsing
+int		check_args(char *argv[]);
 long	ft_atol(char *str);
-size_t	ft_strlen(char *str);
+
+// utils
+size_t	get_current_time(void);
+int		ft_usleep(size_t milliseconds);
+
+// init
+void	ft_init(t_prog *prog, char *argv[]);
 
 #endif

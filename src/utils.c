@@ -5,47 +5,28 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/20 11:35:25 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/20 13:18:24 by rgallien         ###   ########.fr       */
+/*   Created: 2024/06/23 18:32:55 by rgallien          #+#    #+#             */
+/*   Updated: 2024/06/23 19:08:36 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-size_t ft_strlen(char *str)
+int	ft_usleep(size_t milliseconds)
 {
-	size_t	i;
+	size_t	start;
 
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
+	start = get_current_time();
+	while ((get_current_time() - start) < milliseconds)
+		usleep(500);
+	return (0);
 }
 
-long ft_atol(char *str)
+size_t	get_current_time(void)
 {
-	long	i;
-	long	res;
+	struct timeval	time;
 
-	i = 0;
-	res = 0;
-	if (str[i] == '+')
-		i++;
-	while (str[i])
-	{
-		res = (res * 10) + str[i] - 48;
-		i++;
-	}
-	if (res > 2147483647)
-		return (0);
-	return (res);
-}
-
-void ft_free_philos(t_program *philos, int i)
-{
-	while(i >= 0)
-	{
-		free(&philos->ph[i]);
-		i--;
-	}
+	if (gettimeofday(&time, NULL) == -1)
+		write(2, "gettimeofday() error\n", 22);
+	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
