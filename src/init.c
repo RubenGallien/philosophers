@@ -6,24 +6,24 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 17:58:45 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/23 19:11:32 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/06/24 18:01:14 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_forks(t_prog *prog, pthread_mutex_t *forks)
+void	init_forks(t_prog *prog, pthread_mutex_t *forks, long nb_philo)
 {
-	size_t	i;
+	long	i;
 
 	i = 0;
-	while (i < prog->ph[i].nb_philos)
+	while (i < nb_philo)
 	{
 		pthread_mutex_init(&forks[i], NULL);
 		i++;
 	}
 	i = 0;
-	while (i < prog->ph[i].nb_philos)
+	while (i < nb_philo)
 	{
 		prog->ph[i].l_fork = &forks[i];
 		if (prog->ph[i].id == 1)
@@ -51,6 +51,7 @@ void	init_philos(t_prog *prog, char *argv[])
 		prog->ph[i].time_die = ft_atol(argv[1]);
 		prog->ph[i].time_eat = ft_atol(argv[2]);
 		prog->ph[i].time_sleep = ft_atol(argv[3]);
+		prog->ph[i].is_dead = 0;
 		if (argv[4])
 			prog->ph[i].must_eat = ft_atol(argv[4]);
 		else
@@ -59,13 +60,8 @@ void	init_philos(t_prog *prog, char *argv[])
 	}
 }
 
-void	ft_init(t_prog *prog, char *argv[])
+void	ft_init(t_prog *prog, char *argv[], pthread_mutex_t *forks)
 {
-	pthread_mutex_t	*forks;
-
-	forks = malloc(sizeof(pthread_mutex_t) * ft_atol(argv[0]));
-	if (!forks)
-		perror("init of forks failed\n");
 	init_philos(prog, argv);
-	init_forks(prog, forks);
+	init_forks(prog, forks, ft_atol(argv[0]));
 }

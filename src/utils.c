@@ -6,11 +6,16 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:32:55 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/23 19:08:36 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/06/24 20:12:02 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+size_t	time_now(size_t	start)
+{
+	return (get_current_time() - start);
+}
 
 int	ft_usleep(size_t milliseconds)
 {
