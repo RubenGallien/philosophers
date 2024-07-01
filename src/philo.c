@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:52:30 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/24 03:52:13 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/06/28 21:05:00 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,5 @@ int	main(int argc, char *argv[])
 	make_threads(&prog, ft_atol(argv[0]), forks);
 	free(prog.ph);
 	free(forks);
-	return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 17:58:45 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/24 18:01:14 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/06/28 22:02:42 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	init_philos(t_prog *prog, char *argv[])
 	size_t	i;
 
 	i = 0;
-	prog->ph = malloc(sizeof(t_philo) * ft_atol(argv[1]));
+	prog->ph = malloc(sizeof(t_philo) * ft_atol(argv[0]));
 	if (!prog->ph)
 		perror("init of prog->ph failed\n");
 	while (i < (long unsigned int)ft_atol(argv[0]))
@@ -52,6 +52,7 @@ void	init_philos(t_prog *prog, char *argv[])
 		prog->ph[i].time_eat = ft_atol(argv[2]);
 		prog->ph[i].time_sleep = ft_atol(argv[3]);
 		prog->ph[i].is_dead = 0;
+		prog->ph[i].nb_eat = 0;
 		if (argv[4])
 			prog->ph[i].must_eat = ft_atol(argv[4]);
 		else

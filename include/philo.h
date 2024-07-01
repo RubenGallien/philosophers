@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:51:31 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/24 20:12:12 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/06/28 21:32:26 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 typedef struct t_philo
 {
 	int				id;
+	int				nb_eat;
 	size_t			nb_philos;
 	size_t			time_die;
 	size_t			time_eat;
@@ -46,7 +47,7 @@ long	ft_atol(char *str);
 
 // utils
 size_t	get_current_time(void);
-int		ft_usleep(size_t milliseconds);
+int		ft_usleep(size_t milliseconds, t_philo *philo);
 void	make_threads(t_prog *prog, long nb_philo, pthread_mutex_t *forks);
 size_t	time_now(size_t	start);
 // init
