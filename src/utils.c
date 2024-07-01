@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:32:55 by rgallien          #+#    #+#             */
-/*   Updated: 2024/06/28 21:31:57 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/01 11:41:05 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ int	ft_usleep(size_t milliseconds, t_philo *philo)
 {
 	size_t	start;
 
+	(void)*philo;
 	start = get_current_time();
-	while ((get_current_time() - start) < milliseconds && !philo->is_dead)
+	while ((get_current_time() - start) < milliseconds)
 		usleep(500);
 	return (0);
 }
