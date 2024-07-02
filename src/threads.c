@@ -6,20 +6,34 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 19:07:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/01 16:53:04 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:32:02 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	*routine_solo(void *args)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)args;
+	ft_print(philo, "fork");
+	ft_usleep(philo->time_die, philo);
+	return (NULL);
+}
+
 int	checking(t_philo *philos, size_t i)
 {
 	if ((get_current_time() - philos[i].last_meal) > philos[0].time_die)
 	{
-		printf("%ld %d died\n", time_now(philos[i].start), philos[i].id);
+		ft_print(&philos[i], "died");
 		i = -1;
 		while (++i < philos[0].nb_philos)
+		{
+			pthread_mutex_lock(philos->m_dead);
 			philos[i].is_dead = 1;
+			pthread_mutex_unlock(philos->m_dead);
+		}
 		return (1);
 	}
 	i = 0;
@@ -31,9 +45,11 @@ int	checking(t_philo *philos, size_t i)
 			return (0);
 	}
 	--i;
-	while (i >= 0)
+	while (i > 0)
 	{
+		pthread_mutex_lock(philos->m_dead);
 		philos[i].is_dead = 1;
+		pthread_mutex_unlock(philos->m_dead);
 		if (i == 0)
 			return (1);
 		i--;
@@ -72,25 +88,9 @@ void	*routine(void *args)
 		ft_usleep(philo->time_eat * (philo->id % 3), philo);
 	while (!philo->is_dead)
 	{
-		pthread_mutex_lock(philo->l_fork);
-		printf("%ld %d has taken a fork\n", time_now(philo->start), philo->id);
-		if (philo->nb_philos == 1)
-		{
-			ft_usleep(philo->time_die, philo);
-			return (NULL);
-		}
-		pthread_mutex_lock(philo->r_fork);
-		printf("%ld %d has taken a fork\n", time_now(philo->start), philo->id);
-		printf("%ld %d is eating\n", time_now(philo->start), philo->id);
-		philo->nb_eat++;
-		philo->last_meal = get_current_time();
-		ft_usleep(philo->time_eat, philo);
-		pthread_mutex_unlock(philo->r_fork);
-		pthread_mutex_unlock(philo->l_fork);
-		printf("%ld %d is sleeping\n", time_now(philo->start), philo->id);
-		ft_usleep(philo->time_sleep, philo);
-		printf("%ld %d is thinking\n", time_now(philo->start), philo->id);
-		ft_usleep(1, philo);
+		ft_eat(philo);
+		ft_sleep(philo);
+		ft_think(philo);
 	}
 	return (NULL);
 }
@@ -101,10 +101,12 @@ void	make_threads(t_prog *prog, long nb_philo, pthread_mutex_t *forks)
 	pthread_t	monitor;
 
 	i = -1;
-	while (++i < nb_philo)
+	if (prog->ph[0].nb_philos == 1)
+		pthread_create(&prog->ph[0].th, NULL, &routine_solo, &prog->ph[0]);
+	else
 	{
-		if (pthread_create(&prog->ph[i].th, NULL, &routine, &prog->ph[i]) != 0)
-			perror("philos create error\n");
+		while (++i < nb_philo)
+			pthread_create(&prog->ph[i].th, NULL, &routine, &prog->ph[i]);
 	}
 	i = -1;
 	if (pthread_create(&monitor, NULL, &monitoring, prog->ph) != 0)
@@ -112,10 +114,7 @@ void	make_threads(t_prog *prog, long nb_philo, pthread_mutex_t *forks)
 	if (pthread_join(monitor, NULL) != 0)
 		perror("pthread join error\n");
 	while (++i < nb_philo)
-	{
 		if (pthread_join(prog->ph[i].th, NULL) != 0)
-			perror("philos join error\n");
-	}
 	i = -1;
 	while (++i < nb_philo)
 		pthread_mutex_destroy(&forks[i]);

@@ -7,7 +7,8 @@ SRCS	=	philo.c \
 			parsing.c \
 			init.c \
 			utils.c \
-			threads.c
+			threads.c \
+			step.c \
 
 SRCS	:= $(SRCS:%=$(SRC_DIR)/%)
 OBJS	=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

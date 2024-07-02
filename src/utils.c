@@ -6,11 +6,43 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:32:55 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/01 11:41:05 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/02 17:17:06 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	size_t	i;
+
+	i = 0;
+	while ((s1[i] || s2[i]) && i < n)
+	{
+		if (s1[i] == s2[i])
+			i++;
+		else
+			return (((unsigned char *)s1)[i] - ((unsigned char *)s2)[i]);
+	}
+	return (0);
+}
+void	ft_print(t_philo *philo, char *step)
+{
+	pthread_mutex_lock(philo->m_dead);
+	pthread_mutex_lock(philo->m_print);
+	if (!ft_strncmp(step, "died", ft_strlen(step)) && !philo->is_dead)
+		printf("%ld %d died\n", time_now(philo->start), philo->id);
+	if (!ft_strncmp(step, "fork", ft_strlen(step)) && !philo->is_dead)
+		printf("%ld %d has taken a fork\n", time_now(philo->start), philo->id);
+	if (!ft_strncmp(step, "eat", ft_strlen(step)) && !philo->is_dead)
+		printf("%ld %d is eating\n", time_now(philo->start), philo->id);
+	if (!ft_strncmp(step, "sleep", ft_strlen(step)) && !philo->is_dead)
+		printf("%ld %d is sleeping\n", time_now(philo->start), philo->id);
+	if (!ft_strncmp(step, "think", ft_strlen(step)) && !philo->is_dead)
+		printf("%ld %d is thinking\n", time_now(philo->start), philo->id);
+	pthread_mutex_unlock(philo->m_print);
+	pthread_mutex_unlock(philo->m_dead);
+}
 
 size_t	time_now(size_t	start)
 {
