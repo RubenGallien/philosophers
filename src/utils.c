@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:32:55 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/02 17:17:06 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/03 11:00:01 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	}
 	return (0);
 }
+
 void	ft_print(t_philo *philo, char *step)
 {
 	pthread_mutex_lock(philo->m_dead);

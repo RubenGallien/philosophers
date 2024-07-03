@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:51:31 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/02 16:23:34 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:44:47 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ typedef struct t_philo
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*m_print;
 	pthread_mutex_t	*m_dead;
+	pthread_mutex_t	*m_meal;
 	pthread_t		th;
 	int				must_eat;
 	int				is_dead;
@@ -40,6 +41,7 @@ typedef struct t_philo
 
 typedef struct s_prog
 {
+	pthread_mutex_t	m_meal;
 	pthread_mutex_t	m_print;
 	pthread_mutex_t	m_dead;
 	t_philo			*ph;
@@ -63,5 +65,10 @@ void	ft_init(t_prog *prog, char *argv[], pthread_mutex_t *forks);
 int		ft_eat(t_philo *philo);
 int		ft_sleep(t_philo *philo);
 int		ft_think(t_philo *philo);
+
+//check_dead
+int		ft_is_dead(t_philo *philo);
+int		meal_too_late(t_philo *philos);
+int		eat_enough(t_philo *philos);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 19:07:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/02 17:32:02 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/03 17:59:54 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,57 +22,14 @@ void	*routine_solo(void *args)
 	return (NULL);
 }
 
-int	checking(t_philo *philos, size_t i)
-{
-	if ((get_current_time() - philos[i].last_meal) > philos[0].time_die)
-	{
-		ft_print(&philos[i], "died");
-		i = -1;
-		while (++i < philos[0].nb_philos)
-		{
-			pthread_mutex_lock(philos->m_dead);
-			philos[i].is_dead = 1;
-			pthread_mutex_unlock(philos->m_dead);
-		}
-		return (1);
-	}
-	i = 0;
-	while (i < philos[0].nb_philos)
-	{
-		if (philos[0].must_eat > 0 && philos[i].nb_eat >= philos[0].must_eat)
-			i++;
-		else
-			return (0);
-	}
-	--i;
-	while (i > 0)
-	{
-		pthread_mutex_lock(philos->m_dead);
-		philos[i].is_dead = 1;
-		pthread_mutex_unlock(philos->m_dead);
-		if (i == 0)
-			return (1);
-		i--;
-	}
-	return (1);
-}
-
 void	*monitoring(void *args)
 {
 	t_philo	*philos;
-	size_t	i;
-
-	i = 0;
 	philos = (t_philo *)args;
 	while (1)
 	{
-		i = 0;
-		while (i < philos[0].nb_philos)
-		{
-			if (checking(philos, i))
-				return (NULL);
-			i++;
-		}
+		if (meal_too_late(philos) || eat_enough(philos))
+			break ;
 	}
 	return (NULL);
 }
@@ -86,7 +43,9 @@ void	*routine(void *args)
 		ft_usleep(philo->time_eat * (philo->id % 2), philo);
 	else if (philo->nb_philos % 2 == 1)
 		ft_usleep(philo->time_eat * (philo->id % 3), philo);
-	while (!philo->is_dead)
+	// if (philo->id % 2 == 0)
+	// 	ft_usleep(philo->time_eat, philo);
+	while (!ft_is_dead(philo))
 	{
 		ft_eat(philo);
 		ft_sleep(philo);

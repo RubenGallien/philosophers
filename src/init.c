@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 17:58:45 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/02 15:57:43 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:46:29 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init_forks(t_prog *prog, pthread_mutex_t *forks, long nb_philo)
 
 	pthread_mutex_init(&prog->m_dead, NULL);
 	pthread_mutex_init(&prog->m_print, NULL);
+	pthread_mutex_init(&prog->m_meal, NULL);
 	i = 0;
 	while (i < nb_philo)
 	{
@@ -29,6 +30,7 @@ void	init_forks(t_prog *prog, pthread_mutex_t *forks, long nb_philo)
 	{
 		prog->ph[i].m_dead = &prog->m_dead;
 		prog->ph[i].m_print = &prog->m_print;
+		prog->ph[i].m_meal = &prog->m_meal;
 		prog->ph[i].l_fork = &forks[i];
 		if (prog->ph[i].id == 1)
 			prog->ph[i].r_fork = &forks[prog->ph[i].nb_philos - 1];

@@ -9,6 +9,7 @@ SRCS	=	philo.c \
 			utils.c \
 			threads.c \
 			step.c \
+			check_dead.c \
 
 SRCS	:= $(SRCS:%=$(SRC_DIR)/%)
 OBJS	=	$(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
