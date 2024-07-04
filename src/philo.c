@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:52:30 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/03 15:55:14 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/04 11:33:58 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ int	main(int argc, char *argv[])
 	make_threads(&prog, ft_atol(argv[0]), forks);
 	free(prog.ph);
 	free(forks);
-	// pthread_mutex_destroy(&prog.m_meal);
 	pthread_mutex_destroy(&prog.m_dead);
 	pthread_mutex_destroy(&prog.m_print);
+	pthread_mutex_destroy(&prog.m_meal);
+	pthread_mutex_destroy(&prog.m_eat);
 	return (0);
 }

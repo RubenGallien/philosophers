@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 18:32:55 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/03 11:00:01 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/04 11:26:19 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ void	ft_print(t_philo *philo, char *step)
 	if (!ft_strncmp(step, "fork", ft_strlen(step)) && !philo->is_dead)
 		printf("%ld %d has taken a fork\n", time_now(philo->start), philo->id);
 	if (!ft_strncmp(step, "eat", ft_strlen(step)) && !philo->is_dead)
+	{
+		pthread_mutex_lock(philo->m_eat);
+		philo->nb_eat++;
+		pthread_mutex_unlock(philo->m_eat);
 		printf("%ld %d is eating\n", time_now(philo->start), philo->id);
+	}
 	if (!ft_strncmp(step, "sleep", ft_strlen(step)) && !philo->is_dead)
 		printf("%ld %d is sleeping\n", time_now(philo->start), philo->id);
 	if (!ft_strncmp(step, "think", ft_strlen(step)) && !philo->is_dead)

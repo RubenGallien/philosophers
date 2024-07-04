@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 19:07:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/03 17:59:54 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/04 11:33:45 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,28 @@ void	*routine_solo(void *args)
 
 void	*monitoring(void *args)
 {
-	t_philo	*philos;
+	t_philo		*philos;
+	size_t		i;
+
+	i = 0;
 	philos = (t_philo *)args;
 	while (1)
 	{
-		if (meal_too_late(philos) || eat_enough(philos))
+		if (meal_too_late(philos))
 			break ;
+		if (eat_enough(philos))
+		{
+			while (i < philos[0].nb_philos)
+			{
+				pthread_mutex_lock(philos[0].m_dead);
+				philos[i].is_dead = 1;
+				pthread_mutex_unlock(philos[0].m_dead);
+				i++;
+			}
+			break ;
+		}
 	}
-	return (NULL);
+	return (philos);
 }
 
 void	*routine(void *args)
@@ -39,12 +53,8 @@ void	*routine(void *args)
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
-	if (philo->nb_philos % 2 == 0)
-		ft_usleep(philo->time_eat * (philo->id % 2), philo);
-	else if (philo->nb_philos % 2 == 1)
-		ft_usleep(philo->time_eat * (philo->id % 3), philo);
-	// if (philo->id % 2 == 0)
-	// 	ft_usleep(philo->time_eat, philo);
+	if (philo->id % 2 == 0)
+		ft_usleep(philo->time_eat, philo);
 	while (!ft_is_dead(philo))
 	{
 		ft_eat(philo);
@@ -73,7 +83,7 @@ void	make_threads(t_prog *prog, long nb_philo, pthread_mutex_t *forks)
 	if (pthread_join(monitor, NULL) != 0)
 		perror("pthread join error\n");
 	while (++i < nb_philo)
-		if (pthread_join(prog->ph[i].th, NULL) != 0)
+		pthread_join(prog->ph[i].th, NULL);
 	i = -1;
 	while (++i < nb_philo)
 		pthread_mutex_destroy(&forks[i]);

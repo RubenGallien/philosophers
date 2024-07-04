@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 12:36:54 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/03 18:02:05 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/04 11:33:31 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,35 +24,33 @@ int	ft_is_dead(t_philo *philo)
 	return (0);
 }
 
-int meal_too_late(t_philo *philos)
+int	meal_too_late(t_philo *philos)
 {
-    size_t i;
+	size_t	i;
 
-    i = 0;
-    while (i < philos[0].nb_philos)
-    {
-        pthread_mutex_lock(philos[i].m_meal);
-        if ((get_current_time() - philos[i].last_meal) >= philos[0].time_die)
-        {
+	i = 0;
+	while (i < philos[0].nb_philos)
+	{
+		pthread_mutex_lock(philos[i].m_meal);
+		if ((get_current_time() - philos[i].last_meal) >= philos[0].time_die)
+		{
 			pthread_mutex_unlock(philos[i].m_meal);
-            ft_print(&philos[i], "died");
+			ft_print(&philos[i], "died");
 			i = 0;
-            while (i < philos[0].nb_philos)
-            {
-                pthread_mutex_lock(philos[i].m_dead);
-                philos[i].is_dead = 1;
-                pthread_mutex_unlock(philos[i].m_dead);
+			while (i < philos[0].nb_philos)
+			{
+				pthread_mutex_lock(philos[i].m_dead);
+				philos[i].is_dead = 1;
+				pthread_mutex_unlock(philos[i].m_dead);
 				i++;
-            }
-            return (1);
-        }
-        pthread_mutex_unlock(philos[i].m_meal);
-        i++;
-    }
-    return (0);
+			}
+			return (1);
+		}
+		pthread_mutex_unlock(philos[i].m_meal);
+		i++;
+	}
+	return (0);
 }
-
-
 
 int	eat_enough(t_philo *philos)
 {
@@ -61,20 +59,17 @@ int	eat_enough(t_philo *philos)
 	i = 0;
 	while (i < philos[0].nb_philos)
 	{
+		pthread_mutex_lock(philos[0].m_eat);
 		if (philos[0].must_eat > 0 && philos[i].nb_eat >= philos[0].must_eat)
+		{
+			pthread_mutex_unlock(philos[0].m_eat);
 			i++;
+		}
 		else
+		{
+			pthread_mutex_unlock(philos[0].m_eat);
 			return (0);
+		}
 	}
-	--i;
-	while (i > 0)
-	{
-		pthread_mutex_lock(philos[0].m_dead);
-		philos[i].is_dead = 1;
-		pthread_mutex_unlock(philos[0].m_dead);
-		if (i == 0)
-			return (0);
-		i--;
-	}
-	return (0);
+	return (1);
 }
