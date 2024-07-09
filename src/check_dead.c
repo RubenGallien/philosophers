@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 12:36:54 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/04 11:33:31 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:30:11 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	ft_is_dead(t_philo *philo)
 int	meal_too_late(t_philo *philos)
 {
 	size_t	i;
+	size_t	j;
 
 	i = 0;
 	while (i < philos[0].nb_philos)
@@ -35,15 +36,15 @@ int	meal_too_late(t_philo *philos)
 		if ((get_current_time() - philos[i].last_meal) >= philos[0].time_die)
 		{
 			pthread_mutex_unlock(philos[i].m_meal);
-			ft_print(&philos[i], "died");
-			i = 0;
-			while (i < philos[0].nb_philos)
+			j = 0;
+			while (j < philos[0].nb_philos)
 			{
-				pthread_mutex_lock(philos[i].m_dead);
-				philos[i].is_dead = 1;
-				pthread_mutex_unlock(philos[i].m_dead);
-				i++;
+				pthread_mutex_lock(philos[j].m_dead);
+				philos[j].is_dead = 1;
+				pthread_mutex_unlock(philos[j].m_dead);
+				j++;
 			}
+			printf("%ld %d died\n", time_now(philos[i].start), philos[i].id);
 			return (1);
 		}
 		pthread_mutex_unlock(philos[i].m_meal);
@@ -60,7 +61,7 @@ int	eat_enough(t_philo *philos)
 	while (i < philos[0].nb_philos)
 	{
 		pthread_mutex_lock(philos[0].m_eat);
-		if (philos[0].must_eat > 0 && philos[i].nb_eat >= philos[0].must_eat)
+		if (philos[i].nb_eat >= philos[0].must_eat)
 		{
 			pthread_mutex_unlock(philos[0].m_eat);
 			i++;

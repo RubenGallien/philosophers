@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 17:58:45 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/04 11:33:00 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/09 16:46:25 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,7 @@ void	init_philos(t_prog *prog, char *argv[])
 	while (i < (long unsigned int)ft_atol(argv[0]))
 	{
 		prog->ph[i].id = i + 1;
-		prog->ph[i].last_meal = get_current_time();
 		prog->ph[i].nb_philos = ft_atol(argv[0]);
-		prog->ph[i].start = get_current_time();
 		prog->ph[i].time_die = ft_atol(argv[1]);
 		prog->ph[i].time_eat = ft_atol(argv[2]);
 		prog->ph[i].time_sleep = ft_atol(argv[3]);
@@ -62,6 +60,8 @@ void	init_philos(t_prog *prog, char *argv[])
 			prog->ph[i].must_eat = ft_atol(argv[4]);
 		else
 			prog->ph[i].must_eat = -1;
+		prog->ph[i].start = get_current_time();
+		prog->ph[i].last_meal = get_current_time();
 		i++;
 	}
 }

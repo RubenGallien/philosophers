@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 15:51:31 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/04 10:59:33 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/08 16:47:27 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	ft_print(t_philo *philo, char *step);
 void	ft_init(t_prog *prog, char *argv[], pthread_mutex_t *forks);
 
 //step
-int		ft_eat(t_philo *philo);
+int		ft_eat(t_philo *philo, pthread_mutex_t *first, pthread_mutex_t *second);
 int		ft_sleep(t_philo *philo);
 int		ft_think(t_philo *philo);
 

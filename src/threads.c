@@ -6,7 +6,7 @@
 /*   By: rgallien <rgallien@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/23 19:07:38 by rgallien          #+#    #+#             */
-/*   Updated: 2024/07/04 11:33:45 by rgallien         ###   ########.fr       */
+/*   Updated: 2024/07/09 17:17:12 by rgallien         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*monitoring(void *args)
 	{
 		if (meal_too_late(philos))
 			break ;
-		if (eat_enough(philos))
+		if (philos[0].must_eat > 0 && eat_enough(philos))
 		{
 			while (i < philos[0].nb_philos)
 			{
@@ -44,6 +44,7 @@ void	*monitoring(void *args)
 			}
 			break ;
 		}
+		usleep(1000);
 	}
 	return (philos);
 }
@@ -53,11 +54,14 @@ void	*routine(void *args)
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
-	if (philo->id % 2 == 0)
-		ft_usleep(philo->time_eat, philo);
+	if (philo->id % 2)
+		ft_usleep(philo->time_eat / 2, philo);
 	while (!ft_is_dead(philo))
 	{
-		ft_eat(philo);
+		if (!(philo->id % 2))
+			ft_eat(philo, philo->l_fork, philo->r_fork);
+		else
+			ft_eat(philo, philo->r_fork, philo->l_fork);
 		ft_sleep(philo);
 		ft_think(philo);
 	}
